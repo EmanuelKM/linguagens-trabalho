@@ -159,3 +159,5 @@ AFD, teste = determinizaAFN(AFN, len(alfabeto))
 for estado in AFD:
     print(estado)
 print(teste)
+
+print("hi")
