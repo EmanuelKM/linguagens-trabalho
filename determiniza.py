@@ -83,9 +83,9 @@ def determinizaAFN(afn, tamanhoAlfabeto):
     afd.append(inicializaAfd(afn))
 
     estadosVisitados = ['q0']
-    iteradorAFD = 0
+    iteradorAFD = 0 #indice na lista 'AFD'
     
-    while len(estadosVisitados) != iteradorAFD: #flag de repeticao de estado no afd
+    while len(estadosVisitados) != iteradorAFD:
 
         for possivelEstado in afd[iteradorAFD]:
             if possivelEstado not in estadosVisitados and possivelEstado != None:
@@ -148,16 +148,35 @@ def unificaEstados(listaDeEstados):
 
     return ''.join(listaDeEstados)
 
+def processaPalavra(alfabeto, estadosFinais, estadoInicial, afd, estadosAFD, palavra):
+
+    estadoAtual = estadosAFD.index(estadoInicial) #comeca pelo estado inicial
+    
+    for simbolo in palavra:
+        if simbolo not in alfabeto:
+            print("Palavra rejeitada")
+            break
+
+        indiceSimbolo = alfabeto.index(simbolo)
+
+        if afd[estadoAtual][indiceSimbolo] is not None:
+            estadoAtual = estadosAFD.index(afd[estadoAtual][indiceSimbolo])
+
+    analisaSaida(estadosFinais, estadoAtual, estadosAFD)
+
+def analisaSaida(estadosFinais, estadoAtual, estadosAFD):
+    
+    for estado in estadosFinais:
+        if estado in estadosAFD[estadoAtual]:
+            print("Palavra aceita")
+            return
+        
+    print("Palavra rejeitada")
+
+
+#main
 AFN, estadoInicial, estadosFinais, alfabeto = leAFN()
 
-for estado in AFN:
-    print(estado)
-print('\n')
+AFD, conjuntoEstados = determinizaAFN(AFN, len(alfabeto))
 
-AFD, teste = determinizaAFN(AFN, len(alfabeto))
-
-for estado in AFD:
-    print(estado)
-print(teste)
-
-print("hi")
+processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoEstados, "ab")
