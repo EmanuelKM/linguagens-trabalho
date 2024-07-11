@@ -1,7 +1,10 @@
-import re
-import pdb
+import re #modulo pra extrair informacoes do arquivo de entrada
 
-#expressoes regulares
+##################################
+#funcoes para leitura do arquivo
+##################################
+
+#expressoes regulares para extrair informacoes do arquivo de entrada
 padraoDados = re.compile(r"(\w+)\=\((\{[^\}]*\}),(\{[^\}]*\}),(\w+),(\{[^\}]*\})\)")
 #groups
 #1 = nome do afn
@@ -23,15 +26,16 @@ def leAFN():
 
     with open("afn.txt","r") as arquivo:
         linhas = arquivo.readlines()
-        dados = linhas[0]
+        dados = linhas[0] #pego a primeira linha do arquivo onde tem estados, alfabeto, estado inicial e estados finais
         dadosDoAFN = re.search(padraoDados,dados)
 
         estadoInicial = dadosDoAFN.group(4)
         estadosFinais = extraiEstadosFinais(dadosDoAFN.group(5))
-
         alfabeto = extraiAlfabeto(dadosDoAFN.group(3))
-
-        AFN = criaAFN(dadosDoAFN.group(2))
+    
+        #eu inicialmente crio uma lista de listas com o tamanho de estados
+        #e preencho com None, depois eu preencho com os estados que a funcao programa me diz
+        AFN = criaAFN(dadosDoAFN.group(2), len(alfabeto))
         
         for funcaoPrograma in linhas[2:]:
             funcaoPrograma = re.search(padraoFuncaoPrograma,funcaoPrograma)
@@ -52,10 +56,10 @@ def extraiAlfabeto(alfabeto):
     alfabeto = alfabeto.split(",")
     return alfabeto
 
-def criaAFN(estados):
+def criaAFN(estados, tamanhoAlfabeto):
     AFN = []
     for i in range(quantidadeDeEstados(estados)):
-        AFN.append(conjuntoDefault())
+        AFN.append(conjuntoDefault(tamanhoAlfabeto))
     return AFN
 
 def defineEstadoAtual(nomeEstado, afn):
@@ -75,11 +79,20 @@ def quantidadeDeEstados(estados):
 
     return contador
 
-def conjuntoDefault():
-    return [None,None]
+def conjuntoDefault(tamanhoAlfabeto):
+    conjunto = []
+    for i in range(tamanhoAlfabeto):
+        conjunto.append(None)
+
+    return conjunto
+
+##################################
+#funcoes para determinizacao
+##################################
 
 def determinizaAFN(afn, tamanhoAlfabeto):
     afd = []
+    #essa inicializacao eu faco copiando a funcao de transicao do estado inicial do AFN pro AFD
     afd.append(inicializaAfd(afn))
 
     estadosVisitados = ['q0']
@@ -110,6 +123,12 @@ def inicializaAfd(afn):
         primeiroEstado.append(unificaEstados(simbolo))
 
     return primeiroEstado
+
+def unificaEstados(listaDeEstados):
+    if listaDeEstados == None:
+        return None
+
+    return ''.join(listaDeEstados)
     
 def extraiIndices(estado):
     indices = []
@@ -124,7 +143,8 @@ def extraiIndices(estado):
     return indices
 
 def extraiListaDeEstados(estados, afn, letra):
-
+    #se temos apenas um estado para analisar e ele nao tem transicao com a letra
+    #funcao de transicao vazia
     if len(estados) == 1 and afn[estados[0]][letra] == None:
         return None
 
@@ -142,36 +162,40 @@ def extraiListaDeEstados(estados, afn, letra):
 def simplificaLista(lista):
     return [item for listaInterior in lista for item in listaInterior]
 
-def unificaEstados(listaDeEstados):
-    if listaDeEstados == None:
-        return None
-
-    return ''.join(listaDeEstados)
+##################################
+#funcoes para processar palavras
+##################################
 
 def processaPalavra(alfabeto, estadosFinais, estadoInicial, afd, estadosAFD, palavra):
 
     estadoAtual = estadosAFD.index(estadoInicial) #comeca pelo estado inicial
-    
+
+    palavraLidaParcialmente = False
+
     for simbolo in palavra:
         if simbolo not in alfabeto:
             print("Palavra rejeitada")
+            palavraLidaParcialmente = True
             break
 
         indiceSimboloNoAFD = alfabeto.index(simbolo)
 
         if afd[estadoAtual][indiceSimboloNoAFD] is None:
             print("Palavra rejeitada")
+            palavraLidaParcialmente = True
             break 
 
         else:
             estadoAtual = estadosAFD.index(afd[estadoAtual][indiceSimboloNoAFD])
 
-    analisaSaida(estadosFinais, estadoAtual, estadosAFD)
+    if not palavraLidaParcialmente:
+        estadoDeParada = estadosAFD[estadoAtual]
+        analisaSaida(estadosFinais, estadoDeParada)
 
-def analisaSaida(estadosFinais, estadoAtual, estadosAFD):
+def analisaSaida(estadosFinais, estadoDeParada):
     
     for estado in estadosFinais:
-        if estado in estadosAFD[estadoAtual]:
+        if estado in estadoDeParada:
             print("Palavra aceita")
             return
         
