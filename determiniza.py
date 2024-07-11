@@ -157,10 +157,14 @@ def processaPalavra(alfabeto, estadosFinais, estadoInicial, afd, estadosAFD, pal
             print("Palavra rejeitada")
             break
 
-        indiceSimbolo = alfabeto.index(simbolo)
+        indiceSimboloNoAFD = alfabeto.index(simbolo)
 
-        if afd[estadoAtual][indiceSimbolo] is not None:
-            estadoAtual = estadosAFD.index(afd[estadoAtual][indiceSimbolo])
+        if afd[estadoAtual][indiceSimboloNoAFD] is None:
+            print("Palavra rejeitada")
+            break 
+
+        else:
+            estadoAtual = estadosAFD.index(afd[estadoAtual][indiceSimboloNoAFD])
 
     analisaSaida(estadosFinais, estadoAtual, estadosAFD)
 
