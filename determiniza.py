@@ -205,6 +205,6 @@ def analisaSaida(estadosFinais, estadoDeParada):
 #main
 AFN, estadoInicial, estadosFinais, alfabeto = leAFN()
 
-AFD, conjuntoEstados = determinizaAFN(AFN, len(alfabeto))
+AFD, conjuntoDeEstadosDoAFD = determinizaAFN(AFN, len(alfabeto))
 
-processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoEstados, "ab")
+processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoDeEstadosDoAFD, "ababab")
