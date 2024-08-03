@@ -197,4 +197,4 @@ AFN, estadoInicial, estadosFinais, alfabeto = leAFN()
 
 AFD, conjuntoDeEstadosDoAFD = determinizaAFN(AFN, len(alfabeto))
 
-processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoEstados, "")
+processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoDeEstadosDoAFD, "a2#")
