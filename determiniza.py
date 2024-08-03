@@ -10,7 +10,7 @@ padraoDados = re.compile(r"(\w+)\=\((\{[^\}]*\}),(\{[^\}]*\}),(\w+),(\{[^\}]*\})
 #4 = estadoInicial
 #5 = estadosFinais
 
-padraoFuncaoPrograma = re.compile(r"\(\w(\w),(\w)\)\=(\{[^\}]*\})")
+padraoFuncaoPrograma = re.compile(r"\(\w(\w),(.)\)\=(\{[^\}]*\})")
 #groups
 #1 = indice do estadoAtual
 #2 = simbolo lido da fita
@@ -31,8 +31,8 @@ def leAFN():
 
         alfabeto = extraiAlfabeto(dadosDoAFN.group(3))
 
-        AFN = criaAFN(dadosDoAFN.group(2))
-        
+        AFN = criaAFN(dadosDoAFN.group(2), len(alfabeto))
+
         for funcaoPrograma in linhas[2:]:
             funcaoPrograma = re.search(padraoFuncaoPrograma,funcaoPrograma)
             estadoAtual = defineEstadoAtual(funcaoPrograma.group(1), AFN)
@@ -52,10 +52,10 @@ def extraiAlfabeto(alfabeto):
     alfabeto = alfabeto.split(",")
     return alfabeto
 
-def criaAFN(estados):
+def criaAFN(estados, tamAlfabeto):
     AFN = []
     for i in range(quantidadeDeEstados(estados)):
-        AFN.append(conjuntoDefault())
+        AFN.append(conjuntoDefault(tamAlfabeto))
     return AFN
 
 def defineEstadoAtual(nomeEstado, afn):
@@ -75,8 +75,8 @@ def quantidadeDeEstados(estados):
 
     return contador
 
-def conjuntoDefault():
-    return [None,None]
+def conjuntoDefault(tamAlfabeto):
+    return [None for i in range(tamAlfabeto)]
 
 def determinizaAFN(afn, tamanhoAlfabeto):
     afd = []
@@ -179,4 +179,4 @@ AFN, estadoInicial, estadosFinais, alfabeto = leAFN()
 
 AFD, conjuntoEstados = determinizaAFN(AFN, len(alfabeto))
 
-processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoEstados, "ab")
+processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoEstados, "")
