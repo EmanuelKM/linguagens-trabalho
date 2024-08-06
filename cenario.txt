@@ -1,9 +1,14 @@
 Nomes: Emanuel Miranda, Isadora Schwaab, Julianne Martins
 
-Escolhemos um autômato reconhecedor de senhas que possuem ocorrências determinadas de símbolos do alfabeto.
-Esse autômato reconhece palavras formadas por letras (apenas minúsculas; a-z), números (0-9) e símbolos de um alfabeto pré-determinado 
-(!,@,#,$,%,&,*,-,=,+).
+Escolhemos um autômato reconhecedor de senhas que possuem ocorrências determinadas de símbolos do alfabeto. Esse autômato reconhece palavras formadas por letras (apenas minúsculas; a-z), números (0-9) e "símbolos" de um alfabeto pré-determinado (!,@,#,$,%,&,*,-,=,+).
 
 alfabeto ∑ = {a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,!,@,#,$,%,&,*,-,=,+,0,1,2,3,3,4,5,6,7,8,9}
 
 Ls = {w | w é formada por uma letra e um número e um símbolo}
+
+P.S.
+Tendo em vista que o alfabeto possuí 47 símbolos, para a melhor legibilidade do desenho do autômato, o alfabeto será abstraído para 3 letras (L, N e S) que simbolizarão os seguintes subconjuntos do alfabeto:
+
+L = ∑={a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}
+N = ∑={0,1,2,3,3,4,5,6,7,8,9}
+S = ∑={!,@,#,$,%,&,*,-,=,+}

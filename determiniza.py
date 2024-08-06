@@ -197,4 +197,9 @@ AFN, estadoInicial, estadosFinais, alfabeto = leAFN()
 
 AFD, conjuntoDeEstadosDoAFD = determinizaAFN(AFN, len(alfabeto))
 
-processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoDeEstadosDoAFD, "a2#")
+with open("palavras.txt", "r") as entrada:
+    palavras = entrada.readline()
+    palavras = palavras.split(",")
+
+    for palavra in palavras:
+        processaPalavra(alfabeto, estadosFinais, estadoInicial, AFD, conjuntoDeEstadosDoAFD, palavra)
